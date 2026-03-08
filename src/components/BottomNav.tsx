@@ -14,23 +14,20 @@ const tabs = [
 export default function BottomNav() {
   const pathname = usePathname();
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 glass-dark shadow-nav" style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
-      <div className="max-w-lg mx-auto flex items-center justify-around px-1 pt-2 pb-1.5">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 glass shadow-nav border-t border-black/[0.03]" style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
+      <div className="max-w-lg mx-auto flex items-center justify-around px-2 pt-2 pb-1">
         {tabs.map((tab) => {
           const active = pathname === tab.href;
           return (
-            <Link key={tab.href} href={tab.href} className="relative flex flex-col items-center gap-1 px-4 py-1.5 min-w-[48px]">
+            <Link key={tab.href} href={tab.href} className="relative flex flex-col items-center gap-1 px-4 py-1 min-w-[48px]">
               {active && (
-                <motion.div
-                  layoutId="nav-glow"
-                  className="absolute -inset-1 rounded-2xl bg-honey-400/10"
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                />
+                <motion.div layoutId="pill" className="absolute -top-2 w-10 h-1 rounded-full bg-brand" transition={{ type: "spring", stiffness: 400, damping: 30 }} />
               )}
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={`relative z-10 transition-colors duration-200 ${active ? "text-honey-400" : "text-cream-faint"}`}>
-                {tab.d.split(" M").map((seg, i) => <path key={i} d={i === 0 ? seg : "M" + seg} />)}
+              <svg width="22" height="22" viewBox="0 0 24 24" fill={active ? "url(#navGrad)" : "none"} stroke={active ? "url(#navGrad)" : "#A8A8B8"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="transition-all duration-200">
+                <defs><linearGradient id="navGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#FF6B6B" /><stop offset="100%" stopColor="#FF8E53" /></linearGradient></defs>
+                {tab.d.split(" M").map((seg, i) => <path key={i} d={i === 0 ? seg : "M" + seg} fill="none" />)}
               </svg>
-              <span className={`relative z-10 text-[9px] font-semibold tracking-wider uppercase transition-colors duration-200 ${active ? "text-honey-400" : "text-cream-faint"}`}>{tab.label}</span>
+              <span className={`text-[10px] font-bold tracking-wide transition-all duration-200 ${active ? "text-coral-400" : "text-ink-muted"}`}>{tab.label}</span>
             </Link>
           );
         })}

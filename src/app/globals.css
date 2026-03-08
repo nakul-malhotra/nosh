@@ -2,82 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gabarito:wght@400;500;600;700;800;900&family=Urbanist:ital,wght@0,300..900;1,300..900&display=swap');
 
 :root {
-  --honey: #D4A054;
-  --ember: #E8663C;
-  --herb: #6ECBA0;
-  --base: #0C0A08;
-  --cream: #F2EBE1;
+  --gradient: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 50%, #FFBE76 100%);
+  --gradient-vivid: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 35%, #FFBE76 65%, #7C5CFC 100%);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 * { -webkit-tap-highlight-color: transparent; }
-
-html {
-  scroll-behavior: smooth;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
 
 body {
-  font-family: 'Outfit', system-ui, sans-serif;
-  background: var(--base);
-  color: var(--cream);
+  font-family: 'Urbanist', system-ui, sans-serif;
+  background: #FFFBF5;
+  color: #1A1A2E;
   min-height: 100dvh;
   overflow-x: hidden;
-  position: relative;
 }
 
-/* ── Ambient glow orbs ── */
-body::before {
-  content: '';
-  position: fixed;
-  top: -20vh;
-  right: -15vw;
-  width: 60vw;
-  height: 60vw;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(212,160,84,0.07) 0%, transparent 65%);
-  pointer-events: none;
-  z-index: 0;
-  filter: blur(40px);
-}
-
-body::after {
-  content: '';
-  position: fixed;
-  bottom: -15vh;
-  left: -10vw;
-  width: 50vw;
-  height: 50vw;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(232,102,60,0.05) 0%, transparent 65%);
-  pointer-events: none;
-  z-index: 0;
-  filter: blur(40px);
-}
-
-/* ── Grain overlay ── */
-.grain::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  pointer-events: none;
-  opacity: 0.03;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 200px 200px;
-}
-
-::selection {
-  background: rgba(212,160,84,0.25);
-  color: var(--cream);
-}
-
+::selection { background: rgba(255,107,107,0.15); color: #1A1A2E; }
 ::-webkit-scrollbar { width: 0; }
 
 .page-content {
@@ -86,91 +30,93 @@ body::after {
   z-index: 1;
 }
 
-/* ── Glass surfaces ── */
-.glass-dark {
-  background: rgba(22, 18, 16, 0.75);
-  backdrop-filter: blur(24px) saturate(150%);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
+/* ── The signature gradient blob — sits behind page headers ── */
+.hero-blob {
+  position: absolute;
+  top: -80px;
+  right: -60px;
+  width: 280px;
+  height: 280px;
+  background: var(--gradient);
+  opacity: 0.15;
+  filter: blur(60px);
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  animation: blob 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
 }
 
-.glass-card {
-  background: rgba(30, 26, 22, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(242, 235, 225, 0.06);
+.hero-blob-2 {
+  position: absolute;
+  top: 200px;
+  left: -80px;
+  width: 200px;
+  height: 200px;
+  background: linear-gradient(135deg, #20B2AA 0%, #7C5CFC 100%);
+  opacity: 0.08;
+  filter: blur(50px);
+  border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+  animation: blob 10s ease-in-out infinite reverse;
+  pointer-events: none;
+  z-index: 0;
 }
 
-/* ── Warm border utility ── */
-.border-warm {
-  border: 1px solid rgba(212, 160, 84, 0.12);
-}
-
-.border-subtle {
-  border: 1px solid rgba(242, 235, 225, 0.06);
-}
-
-/* ── Stagger animations ── */
-.stagger > * {
-  animation: stgUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-.stagger > *:nth-child(1) { animation-delay: 0ms; }
-.stagger > *:nth-child(2) { animation-delay: 60ms; }
-.stagger > *:nth-child(3) { animation-delay: 120ms; }
-.stagger > *:nth-child(4) { animation-delay: 180ms; }
-.stagger > *:nth-child(5) { animation-delay: 240ms; }
-.stagger > *:nth-child(6) { animation-delay: 300ms; }
-.stagger > *:nth-child(7) { animation-delay: 360ms; }
-.stagger > *:nth-child(8) { animation-delay: 420ms; }
-
-@keyframes stgUp {
-  0% { transform: translateY(16px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
-}
-
-/* ── Honey gradient text ── */
-.text-honey-gradient {
-  background: linear-gradient(135deg, #F5C56A 0%, #D4A054 40%, #E8663C 100%);
+/* ── Gradient utilities ── */
+.bg-brand { background: var(--gradient); }
+.bg-brand-vivid { background: var(--gradient-vivid); }
+.text-brand {
+  background: var(--gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* ── Voice mesh bg ── */
-.voice-mesh {
+/* ── Glass surface ── */
+.glass {
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+/* ── Stagger animation ── */
+.stagger > * { animation: stgUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.stagger > *:nth-child(1) { animation-delay: 0ms; }
+.stagger > *:nth-child(2) { animation-delay: 55ms; }
+.stagger > *:nth-child(3) { animation-delay: 110ms; }
+.stagger > *:nth-child(4) { animation-delay: 165ms; }
+.stagger > *:nth-child(5) { animation-delay: 220ms; }
+.stagger > *:nth-child(6) { animation-delay: 275ms; }
+.stagger > *:nth-child(7) { animation-delay: 330ms; }
+.stagger > *:nth-child(8) { animation-delay: 385ms; }
+
+@keyframes stgUp {
+  0% { transform: translateY(18px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes blob {
+  0%,100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: rotate(0deg) scale(1); }
+  33% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; transform: rotate(120deg) scale(1.1); }
+  66% { border-radius: 50% 30% 50% 70% / 40% 50% 60% 50%; transform: rotate(240deg) scale(0.95); }
+}
+
+/* ── Voice overlay ── */
+.voice-bg {
   background:
-    radial-gradient(ellipse at 30% 80%, rgba(212,160,84,0.6) 0%, transparent 50%),
-    radial-gradient(ellipse at 70% 20%, rgba(232,102,60,0.5) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(110,203,160,0.3) 0%, transparent 60%),
-    #0C0A08;
+    radial-gradient(ellipse at 30% 70%, rgba(255,107,107,0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 30%, rgba(255,190,118,0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(124,92,252,0.2) 0%, transparent 60%),
+    linear-gradient(135deg, #FF6B6B 0%, #FFBE76 50%, #7C5CFC 100%);
 }
 
-/* ── Animated gradient border ── */
-.gradient-ring {
-  position: relative;
-}
-.gradient-ring::before {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border-radius: inherit;
-  background: conic-gradient(from 0deg, #D4A054, #E8663C, #6ECBA0, #D4A054);
-  z-index: -1;
-  animation: ringRotate 4s linear infinite;
-  opacity: 0.7;
-}
-@keyframes ringRotate {
-  to { transform: rotate(360deg); }
-}
-
-/* ── Chip utility ── */
+/* ── Chip ── */
 .chip {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 7px 14px;
+  padding: 8px 16px;
   border-radius: 100px;
   font-size: 13px;
   font-weight: 600;
   transition: all 0.2s ease;
-  border: 1px solid transparent;
 }

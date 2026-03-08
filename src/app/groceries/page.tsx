@@ -7,72 +7,70 @@ import { generateId } from "@/lib/utils";
 
 export default function GroceriesPage() {
   const { meals, groceries, toggleGrocery, setGroceries, addGrocery, removeGrocery, pantryItems } = useApp();
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [newItemName, setNewItemName] = useState("");
+  const [isGen, setIsGen] = useState(false);
+  const [newItem, setNewItem] = useState("");
   const [showAdd, setShowAdd] = useState(false);
 
-  const handleGenerate = useCallback(async () => {
-    if (meals.length === 0) return;
-    setIsGenerating(true);
-    try { const res = await fetch("/api/generate-groceries", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ meals: meals.map(m => ({ name: m.name, ingredients: m.ingredients })), pantryItems: pantryItems.map(p => p.name) }) }); const data = await res.json();
-      if (data.items) { setGroceries(data.items.map((item: any) => ({ id: generateId(), meal_plan_id: "", name: item.name, category: item.category || "Other", quantity: item.quantity, checked: false }))); }
-    } catch (e) { console.error(e); }
-    setIsGenerating(false);
+  const handleGen = useCallback(async () => {
+    if (!meals.length) return; setIsGen(true);
+    try { const r = await fetch("/api/generate-groceries", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ meals: meals.map(m => ({ name: m.name, ingredients: m.ingredients })), pantryItems: pantryItems.map(p => p.name) }) }); const d = await r.json();
+      if (d.items) setGroceries(d.items.map((i: any) => ({ id: generateId(), meal_plan_id: "", name: i.name, category: i.category || "Other", quantity: i.quantity, checked: false })));
+    } catch {} setIsGen(false);
   }, [meals, pantryItems, setGroceries]);
 
-  const handleAddItem = useCallback(() => { if (newItemName.trim()) { addGrocery(newItemName.trim()); setNewItemName(""); setShowAdd(false); } }, [newItemName, addGrocery]);
-
+  const handleAddItem = useCallback(() => { if (newItem.trim()) { addGrocery(newItem.trim()); setNewItem(""); setShowAdd(false); } }, [newItem, addGrocery]);
   const grouped = groceries.reduce((a, i) => { const c = i.category || "Other"; if (!a[c]) a[c] = []; a[c].push(i); return a; }, {} as Record<string, GroceryItem[]>);
-  const checkedCount = groceries.filter(g => g.checked).length;
-  const progress = groceries.length > 0 ? (checkedCount / groceries.length) * 100 : 0;
+  const checked = groceries.filter(g => g.checked).length;
+  const pct = groceries.length ? (checked / groceries.length) * 100 : 0;
 
   return (
-    <div className="px-5 pt-14 pb-4">
-      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-5">
-        <h1 className="font-display text-[36px] font-extrabold text-cream tracking-tight">Groceries</h1>
-        <p className="text-cream-muted text-sm mt-1">{groceries.length > 0 ? `${checkedCount} of ${groceries.length} items checked` : "Generate a list from your meals"}</p>
+    <div className="px-5 pt-12 pb-4 relative overflow-hidden">
+      <div className="hero-blob" /><div className="hero-blob-2" />
+      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="relative z-10 mb-5">
+        <h1 className="font-display text-[42px] font-black text-ink tracking-tight">Groceries</h1>
+        <p className="text-ink-soft text-sm mt-1 font-medium">{groceries.length ? `${checked} of ${groceries.length} items` : "Generate from your meal plan"}</p>
       </motion.div>
 
       {groceries.length > 0 && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-5">
-          <div className="h-2 bg-cream/[0.06] rounded-full overflow-hidden">
-            <motion.div className="h-full bg-gradient-to-r from-herb-400 to-herb-300 rounded-full" initial={{ width: 0 }} animate={{ width: `${progress}%` }} transition={{ duration: 0.5 }} />
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="relative z-10 mb-5">
+          <div className="h-3 bg-parchment-deep rounded-full overflow-hidden shadow-inner">
+            <motion.div className="h-full bg-brand rounded-full" initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.5 }} />
           </div>
         </motion.div>
       )}
 
-      <div className="flex gap-2 mb-6">
-        <motion.button whileTap={{ scale: 0.96 }} onClick={handleGenerate} disabled={meals.length === 0 || isGenerating}
-          className="flex-1 bg-gradient-to-r from-honey-400 to-ember-400 text-base font-bold py-3.5 rounded-2xl disabled:opacity-30 flex items-center justify-center gap-2 text-sm shadow-glow-honey">
-          {isGenerating ? <motion.div className="w-4 h-4 border-2 border-base border-t-transparent rounded-full" animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }} /> : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>}
-          {isGenerating ? "Generating..." : meals.length === 0 ? "Add meals first" : "Generate List"}
+      <div className="relative z-10 flex gap-2.5 mb-6">
+        <motion.button whileTap={{ scale: 0.96 }} onClick={handleGen} disabled={!meals.length || isGen}
+          className="flex-1 bg-brand text-white font-display font-bold py-4 rounded-2xl disabled:opacity-30 flex items-center justify-center gap-2 shadow-glow-lg text-[15px]">
+          {isGen ? <motion.div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full" animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }} /> : "✨"} {isGen ? "Generating..." : !meals.length ? "Add meals first" : "Generate List"}
         </motion.button>
         <motion.button whileTap={{ scale: 0.96 }} onClick={() => setShowAdd(true)} data-testid="grocery-add-btn"
-          className="w-14 bg-herb-300 text-base font-bold rounded-2xl flex items-center justify-center shadow-glow-herb text-xl">+</motion.button>
+          className="w-14 bg-teal-400 text-white font-bold rounded-2xl flex items-center justify-center shadow-glow-teal text-2xl">+</motion.button>
       </div>
 
       {groceries.length > 0 ? (
-        <div className="space-y-6 stagger">
+        <div className="relative z-10 space-y-7 stagger">
           {Object.entries(grouped).sort(([a],[b]) => a.localeCompare(b)).map(([cat, items]) => (
             <motion.div key={cat} layout>
-              <div className="flex items-center gap-2 mb-2.5">
-                <span className="text-base">{CATEGORY_EMOJIS[cat] || "📦"}</span>
-                <h3 className="text-[10px] font-bold text-cream-faint tracking-[0.2em] uppercase">{cat}</h3>
-                <span className="text-[10px] text-cream-ghost font-semibold ml-auto">{items.filter(i => i.checked).length}/{items.length}</span>
+              <div className="flex items-center gap-2.5 mb-3">
+                <span className="text-lg">{CATEGORY_EMOJIS[cat] || "📦"}</span>
+                <h3 className="text-[11px] font-bold text-ink-muted tracking-[0.2em] uppercase">{cat}</h3>
+                <div className="flex-1 h-px bg-ink-ghost/30 ml-2" />
+                <span className="text-[11px] text-ink-muted font-bold">{items.filter(i => i.checked).length}/{items.length}</span>
               </div>
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <AnimatePresence mode="popLayout">
                   {items.map(item => (
                     <motion.div key={item.id} layout initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}
-                      className="flex items-center gap-3 glass-card rounded-2xl px-4 py-3.5 shadow-card group">
+                      className="flex items-center gap-3.5 bg-white rounded-2xl px-5 py-4 shadow-soft group hover:shadow-soft-lg transition-shadow">
                       <button onClick={() => toggleGrocery(item.id)}
-                        className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all flex-shrink-0 ${item.checked ? "bg-herb-300 border-herb-300 shadow-glow-herb" : "border-cream-faint hover:border-herb-300/60"}`}>
-                        {item.checked && <motion.svg initial={{ scale: 0 }} animate={{ scale: 1 }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0C0A08" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></motion.svg>}
+                        className={`w-7 h-7 rounded-xl border-2 flex items-center justify-center transition-all flex-shrink-0 ${item.checked ? "bg-brand border-transparent shadow-glow" : "border-ink-ghost hover:border-coral-300"}`}>
+                        {item.checked && <motion.svg initial={{ scale: 0 }} animate={{ scale: 1 }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round"><polyline points="20 6 9 17 4 12" /></motion.svg>}
                       </button>
-                      <span className={`flex-1 text-[15px] font-medium transition-all ${item.checked ? "text-cream-faint line-through" : "text-cream"}`}>
-                        {item.name}{item.quantity && <span className="text-cream-faint text-xs ml-1.5">({item.quantity})</span>}
+                      <span className={`flex-1 text-[15px] font-semibold transition-all ${item.checked ? "text-ink-ghost line-through" : "text-ink"}`}>
+                        {item.name}{item.quantity && <span className="text-ink-muted text-xs ml-1.5 font-normal">({item.quantity})</span>}
                       </span>
-                      <button onClick={() => removeGrocery(item.id)} className="opacity-0 group-hover:opacity-100 text-cream-ghost hover:text-ember-400 transition-all">
+                      <button onClick={() => removeGrocery(item.id)} className="opacity-0 group-hover:opacity-100 text-ink-ghost hover:text-coral-400 transition-all">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
                       </button>
                     </motion.div>
@@ -83,24 +81,24 @@ export default function GroceriesPage() {
           ))}
         </div>
       ) : (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16">
-          <div className="w-16 h-16 rounded-3xl bg-herb-300/10 flex items-center justify-center mx-auto mb-4"><span className="text-3xl">🛒</span></div>
-          <p className="text-cream font-bold text-[15px]">Your grocery list is empty</p>
-          <p className="text-cream-faint text-xs mt-1">Add meals to your plan, then generate a grocery list</p>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="relative z-10 text-center py-16">
+          <div className="w-20 h-20 rounded-[28px] bg-brand mx-auto mb-4 flex items-center justify-center shadow-glow"><span className="text-4xl">🛒</span></div>
+          <p className="text-ink font-bold text-base">Your grocery list is empty</p>
+          <p className="text-ink-muted text-sm mt-1">Add meals first, then tap Generate</p>
         </motion.div>
       )}
 
       <AnimatePresence>
         {showAdd && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm" onClick={() => setShowAdd(false)}>
-            <motion.div initial={{ y: 200 }} animate={{ y: 0 }} exit={{ y: 200 }} transition={{ type: "spring", damping: 28, stiffness: 300 }}
-              className="w-full max-w-lg bg-base-100 rounded-t-[32px] p-6 pb-10 border-t border-cream/[0.06]" onClick={e => e.stopPropagation()}>
-              <div className="w-10 h-1 bg-cream-ghost rounded-full mx-auto mb-6" />
-              <h3 className="font-display text-xl font-extrabold text-cream mb-4">Add grocery item</h3>
-              <input type="text" value={newItemName} onChange={e => setNewItemName(e.target.value)} onKeyDown={e => e.key === "Enter" && handleAddItem()}
-                placeholder="e.g. Avocados" className="w-full bg-base-200 rounded-2xl px-4 py-3.5 text-cream placeholder:text-cream-faint focus:outline-none focus:ring-2 focus:ring-honey-400/50 mb-4 border border-cream/[0.06]" autoFocus />
-              <button onClick={handleAddItem} disabled={!newItemName.trim()} data-testid="grocery-submit-btn"
-                className="w-full bg-gradient-to-r from-honey-400 to-ember-400 text-base font-bold py-3.5 rounded-2xl disabled:opacity-30 shadow-glow-honey">Add</button>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-end justify-center bg-ink/30 backdrop-blur-sm" onClick={() => setShowAdd(false)}>
+            <motion.div initial={{ y: 200 }} animate={{ y: 0 }} exit={{ y: 200 }} transition={{ type: "spring", damping: 28, stiffness: 280 }}
+              className="w-full max-w-lg bg-white rounded-t-[32px] p-6 pb-10 shadow-soft-xl" onClick={e => e.stopPropagation()}>
+              <div className="w-10 h-1 bg-ink-ghost rounded-full mx-auto mb-6" />
+              <h3 className="font-display text-2xl font-extrabold text-ink mb-4">Add grocery item</h3>
+              <input type="text" value={newItem} onChange={e => setNewItem(e.target.value)} onKeyDown={e => e.key === "Enter" && handleAddItem()}
+                placeholder="e.g. Avocados" className="w-full bg-parchment rounded-2xl px-5 py-4 text-ink placeholder:text-ink-ghost focus:outline-none focus:ring-2 focus:ring-coral-300 mb-4" autoFocus />
+              <button onClick={handleAddItem} disabled={!newItem.trim()} data-testid="grocery-submit-btn"
+                className="w-full bg-brand text-white font-display font-bold py-4 rounded-2xl disabled:opacity-30 shadow-glow-lg text-lg">Add</button>
             </motion.div>
           </motion.div>
         )}
