@@ -1,0 +1,115 @@
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        terra: {
+          50: "#FDF2ED",
+          100: "#FADDD2",
+          200: "#F3B8A4",
+          300: "#E8906E",
+          400: "#D9714A",
+          500: "#C75B39",
+          600: "#A8462B",
+          700: "#833623",
+          800: "#5E271A",
+          900: "#3A1810",
+        },
+        sage: {
+          50: "#F4F6F1",
+          100: "#E5EAE0",
+          200: "#CDD6C4",
+          300: "#B0BFA3",
+          400: "#8B9E7C",
+          500: "#6E8461",
+          600: "#566A4B",
+          700: "#41503A",
+          800: "#2D3828",
+          900: "#1B2118",
+        },
+        cream: {
+          50: "#FFFCF7",
+          100: "#FDF6EC",
+          200: "#FAECD5",
+          300: "#F5DDBA",
+          400: "#EDCB97",
+          500: "#E2B574",
+        },
+        bark: {
+          50: "#F5F0ED",
+          100: "#E6DCD6",
+          200: "#C8B5A8",
+          300: "#A48D7D",
+          400: "#7A6558",
+          500: "#5A4A3D",
+          600: "#3D3230",
+          700: "#2D1810",
+          800: "#1E100A",
+          900: "#110905",
+        },
+        saffron: {
+          50: "#FEF8EB",
+          100: "#FCEDC5",
+          200: "#F7DB8E",
+          300: "#F0C65B",
+          400: "#E8A838",
+          500: "#D4902A",
+          600: "#B07320",
+          700: "#855618",
+          800: "#5E3D12",
+        },
+      },
+      fontFamily: {
+        display: ["Instrument Serif", "Georgia", "serif"],
+        body: ["Manrope", "system-ui", "sans-serif"],
+        hand: ["Caveat", "cursive"],
+      },
+      borderRadius: {
+        "2xl": "1rem",
+        "3xl": "1.5rem",
+        "4xl": "2rem",
+      },
+      boxShadow: {
+        warm: "0 4px 20px -2px rgba(199, 91, 57, 0.12)",
+        "warm-lg": "0 8px 40px -4px rgba(199, 91, 57, 0.18)",
+        soft: "0 2px 12px -1px rgba(45, 24, 16, 0.08)",
+        "soft-lg": "0 4px 24px -2px rgba(45, 24, 16, 0.12)",
+      },
+      animation: {
+        "breathe": "breathe 3s ease-in-out infinite",
+        "slide-up": "slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+        "fade-in": "fadeIn 0.4s ease-out",
+        "pulse-ring": "pulseRing 2s ease-out infinite",
+        "check": "check 0.4s cubic-bezier(0.65, 0, 0.35, 1)",
+      },
+      keyframes: {
+        breathe: {
+          "0%, 100%": { transform: "scale(1)", opacity: "0.9" },
+          "50%": { transform: "scale(1.08)", opacity: "1" },
+        },
+        slideUp: {
+          "0%": { transform: "translateY(20px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        pulseRing: {
+          "0%": { transform: "scale(0.8)", opacity: "0.5" },
+          "80%, 100%": { transform: "scale(2.2)", opacity: "0" },
+        },
+        check: {
+          "0%": { strokeDashoffset: "24" },
+          "100%": { strokeDashoffset: "0" },
+        },
+      },
+    },
+  },
+  plugins: [],
+};
