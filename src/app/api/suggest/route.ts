@@ -23,7 +23,7 @@ export async function POST(req: Request) {
         messages: [
           {
             role: "system",
-            content: `You are a meal suggestion AI for a couple (Neha & Knuckles). Suggest 5 meal ideas based on their history and pantry.
+            content: `You are a meal suggestion AI for a couple (Neha & Nakul). Suggest 5 meal ideas based on their history and pantry.
 
 ${busyWeek ? "IMPORTANT: This is a BUSY WEEK. Only suggest meals that take under 30 minutes, with minimal prep and cleanup. Prioritize one-pot meals, stir-fries, wraps, and simple dishes." : ""}
 

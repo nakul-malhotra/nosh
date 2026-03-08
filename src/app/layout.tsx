@@ -4,7 +4,7 @@ import BottomNav from "@/components/BottomNav";
 import { AppProvider } from "@/components/AppProvider";
 
 export const metadata: Metadata = {
-  title: "Nosh · Neha & Knuckles' Kitchen",
+  title: "Nosh · Neha & Nakul's Kitchen",
   description: "Your smart meal planner — speak your meals, get your groceries.",
   manifest: "/manifest.json",
   appleWebApp: {

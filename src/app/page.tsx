@@ -79,7 +79,7 @@ export default function HomePage() {
           Nosh
         </h1>
         <p className="font-hand text-lg text-terra-500 -mt-1">
-          Neha & Knuckles&apos; Kitchen
+          Neha &amp; Nakul&apos;s Kitchen
         </p>
       </motion.div>
 
