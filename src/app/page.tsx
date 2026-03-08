@@ -72,66 +72,65 @@ export default function HomePage() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <p className="text-bark-300 text-sm font-medium tracking-wide uppercase">
+        <p className="text-ink-tertiary text-[13px] font-semibold tracking-widest uppercase">
           {getGreeting()}
         </p>
-        <h1 className="font-display text-4xl text-bark-700 mt-1 italic">
+        <h1 className="font-display text-[40px] font-extrabold text-ink leading-[1.1] mt-1 tracking-tight">
           Nosh
         </h1>
-        <p className="font-hand text-lg text-terra-500 -mt-1">
-          Neha &amp; Nakul&apos;s Kitchen
+        <p className="text-coral-500 text-sm font-semibold mt-0.5">
+          Neha &amp; Nakul&apos;s Kitchen ✦
         </p>
       </motion.div>
 
-      {/* Week Info Card */}
+      {/* Week Overview Card */}
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="bg-white rounded-3xl p-5 shadow-soft mb-6"
+        transition={{ delay: 0.08 }}
+        className="bg-white rounded-3xl p-5 shadow-card mb-5 border border-black/[0.03]"
       >
         <div className="flex items-center justify-between mb-4">
           <div>
-            <p className="text-xs font-semibold text-bark-300 uppercase tracking-wider">
+            <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest">
               This Week
             </p>
-            <p className="text-sm font-bold text-bark-600 mt-0.5">
+            <p className="text-[15px] font-bold text-ink mt-1">
               {formatWeekRange(currentWeek)}
             </p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-4">
             <div className="text-center">
-              <p className="text-2xl font-bold text-terra-500">{totalMeals}</p>
-              <p className="text-[10px] text-bark-300 font-medium">meals</p>
+              <p className="text-[28px] font-extrabold text-coral-500 font-display leading-none">{totalMeals}</p>
+              <p className="text-[10px] text-ink-tertiary font-semibold mt-1">meals</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-sage-500">{uncheckedGroceries}</p>
-              <p className="text-[10px] text-bark-300 font-medium">to buy</p>
+              <p className="text-[28px] font-extrabold text-mint-500 font-display leading-none">{uncheckedGroceries}</p>
+              <p className="text-[10px] text-ink-tertiary font-semibold mt-1">to buy</p>
             </div>
           </div>
         </div>
 
-        {/* Quick day preview */}
+        {/* Day dots */}
         <div className="flex gap-1.5">
           {DAYS.map((day) => {
             const count = meals.filter((m) => m.day_of_week === day).length;
-            const isToday =
-              DAYS[new Date().getDay() === 0 ? 6 : new Date().getDay() - 1] === day;
+            const isToday = DAYS[new Date().getDay() === 0 ? 6 : new Date().getDay() - 1] === day;
             return (
               <div
                 key={day}
-                className={`flex-1 rounded-xl py-2 text-center transition-all ${
+                className={`flex-1 rounded-2xl py-2.5 text-center transition-all ${
                   isToday
-                    ? "bg-terra-500 text-white shadow-warm"
+                    ? "bg-gradient-to-b from-coral-400 to-coral-500 text-white shadow-glow-coral"
                     : count > 0
-                    ? "bg-sage-50 text-sage-700"
-                    : "bg-cream-100 text-bark-200"
+                    ? "bg-mint-50 text-mint-700"
+                    : "bg-bg-alt text-ink-faint"
                 }`}
               >
-                <p className="text-[10px] font-bold uppercase">
+                <p className="text-[9px] font-bold uppercase tracking-wider">
                   {DAY_LABELS[day]}
                 </p>
-                <p className="text-xs font-semibold mt-0.5">
+                <p className={`text-sm font-extrabold mt-0.5 font-display ${isToday ? "text-white" : ""}`}>
                   {count > 0 ? count : "–"}
                 </p>
               </div>
@@ -142,40 +141,37 @@ export default function HomePage() {
 
       {/* Today's Meals */}
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
+        transition={{ delay: 0.15 }}
         className="mb-6"
       >
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-display text-xl text-bark-700">Today&apos;s Menu</h2>
+          <h2 className="font-display text-xl font-extrabold text-ink">Today&apos;s Menu</h2>
           <button
             onClick={() => setShowAddModal(true)}
-            className="text-xs font-bold text-terra-500 bg-terra-50 px-3 py-1.5 rounded-full hover:bg-terra-100 transition-colors"
+            className="text-xs font-bold text-coral-500 bg-coral-50 px-3.5 py-2 rounded-full hover:bg-coral-100 transition-colors active:scale-95"
           >
             + Add
           </button>
         </div>
 
         {todayMeals.length > 0 ? (
-          <div className="space-y-2 stagger-children">
+          <div className="space-y-2 stagger">
             <AnimatePresence mode="popLayout">
               {todayMeals.map((meal, i) => (
-                <MealCard
-                  key={meal.id}
-                  meal={meal}
-                  onRemove={removeMeal}
-                  index={i}
-                />
+                <MealCard key={meal.id} meal={meal} onRemove={removeMeal} index={i} />
               ))}
             </AnimatePresence>
           </div>
         ) : (
-          <div className="bg-white/60 rounded-2xl p-8 text-center">
-            <p className="text-4xl mb-2">🍽️</p>
-            <p className="text-bark-300 text-sm">No meals planned for today</p>
-            <p className="text-bark-200 text-xs mt-1">
-              Tap the mic to plan your week
+          <div className="bg-white rounded-3xl p-8 text-center shadow-card border border-black/[0.03]">
+            <div className="w-14 h-14 rounded-2xl bg-coral-50 flex items-center justify-center mx-auto mb-3">
+              <span className="text-2xl">🍽️</span>
+            </div>
+            <p className="text-ink font-bold text-[15px]">No meals planned yet</p>
+            <p className="text-ink-tertiary text-xs mt-1">
+              Tap the mic below to plan your week
             </p>
           </div>
         )}
@@ -183,16 +179,13 @@ export default function HomePage() {
 
       {/* Voice CTA */}
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="flex flex-col items-center gap-3 py-6"
+        transition={{ delay: 0.25 }}
+        className="flex flex-col items-center gap-3 py-4"
       >
-        <VoiceInput
-          onTranscriptComplete={handleVoiceComplete}
-          isProcessing={isProcessing}
-        />
-        <p className="text-bark-300 text-xs font-medium">
+        <VoiceInput onTranscriptComplete={handleVoiceComplete} isProcessing={isProcessing} />
+        <p className="text-ink-tertiary text-xs font-medium">
           {isProcessing ? "Processing your meals..." : "Tap to speak your meal plan"}
         </p>
       </motion.div>
@@ -204,37 +197,30 @@ export default function HomePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-end justify-center bg-black/30 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm"
             onClick={() => setShowAddModal(false)}
           >
             <motion.div
-              initial={{ y: 300 }}
+              initial={{ y: 400 }}
               animate={{ y: 0 }}
-              exit={{ y: 300 }}
-              transition={{ type: "spring", damping: 28, stiffness: 300 }}
-              className="w-full max-w-lg bg-white rounded-t-3xl p-6 pb-10"
+              exit={{ y: 400 }}
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              className="w-full max-w-lg bg-white rounded-t-[32px] p-6 pb-10"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="w-10 h-1 bg-bark-100 rounded-full mx-auto mb-5" />
-              <h3 className="font-display text-2xl text-bark-700 mb-5">
+              <div className="w-10 h-1 bg-ink-faint rounded-full mx-auto mb-6" />
+              <h3 className="font-display text-2xl font-extrabold text-ink mb-6">
                 Add a meal
               </h3>
 
-              {/* Day selector */}
-              <div className="mb-4">
-                <label className="text-xs font-bold text-bark-400 uppercase tracking-wider mb-2 block">
-                  Day
-                </label>
+              <div className="mb-5">
+                <label className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-2.5 block">Day</label>
                 <div className="flex gap-1.5 flex-wrap">
                   {DAYS.map((day) => (
                     <button
                       key={day}
                       onClick={() => setAddDay(day)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
-                        addDay === day
-                          ? "bg-terra-500 text-white"
-                          : "bg-cream-100 text-bark-400"
-                      }`}
+                      className={`chip transition-all ${addDay === day ? "bg-coral-500 text-white shadow-glow-coral" : "bg-bg-alt text-ink-secondary"}`}
                     >
                       {DAY_LABELS[day]}
                     </button>
@@ -242,21 +228,14 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Meal type selector */}
-              <div className="mb-4">
-                <label className="text-xs font-bold text-bark-400 uppercase tracking-wider mb-2 block">
-                  Meal
-                </label>
+              <div className="mb-5">
+                <label className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-2.5 block">Meal</label>
                 <div className="flex gap-2">
                   {MEAL_TYPES.map((type) => (
                     <button
                       key={type}
                       onClick={() => setAddType(type)}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
-                        addType === type
-                          ? "bg-sage-500 text-white"
-                          : "bg-cream-100 text-bark-400"
-                      }`}
+                      className={`chip gap-1.5 transition-all ${addType === type ? "bg-mint-500 text-white shadow-glow-mint" : "bg-bg-alt text-ink-secondary"}`}
                     >
                       <span>{MEAL_EMOJIS[type]}</span>
                       <span className="capitalize">{type}</span>
@@ -265,18 +244,15 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Name input */}
-              <div className="mb-5">
-                <label className="text-xs font-bold text-bark-400 uppercase tracking-wider mb-2 block">
-                  What are you making?
-                </label>
+              <div className="mb-6">
+                <label className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-2.5 block">What are you making?</label>
                 <input
                   type="text"
                   value={addName}
                   onChange={(e) => setAddName(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleQuickAdd()}
                   placeholder="e.g. Chicken tikka masala"
-                  className="w-full bg-cream-50 border border-cream-200 rounded-2xl px-4 py-3 text-bark-700 placeholder:text-bark-200 focus:outline-none focus:ring-2 focus:ring-terra-300 font-body"
+                  className="w-full bg-bg rounded-2xl px-4 py-3.5 text-ink placeholder:text-ink-faint focus:outline-none focus:ring-2 focus:ring-coral-300 font-body border border-black/[0.04]"
                   autoFocus
                 />
               </div>
@@ -284,7 +260,7 @@ export default function HomePage() {
               <button
                 onClick={handleQuickAdd}
                 disabled={!addName.trim()}
-                className="w-full bg-terra-500 text-white font-bold py-3.5 rounded-2xl disabled:opacity-40 transition-all active:scale-[0.98]"
+                className="w-full bg-gradient-to-r from-coral-500 to-coral-400 text-white font-bold py-4 rounded-2xl disabled:opacity-40 transition-all active:scale-[0.98] shadow-glow-coral"
               >
                 Add to plan
               </button>

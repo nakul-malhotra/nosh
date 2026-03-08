@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useApp } from "@/components/AppProvider";
 import MealCard from "@/components/MealCard";
 import VoiceInput from "@/components/VoiceInput";
-import { DAYS, DAY_LABELS, MEAL_TYPES, MEAL_EMOJIS, DayOfWeek, MealType } from "@/lib/types";
+import { DAYS, DAY_LABELS, MEAL_TYPES, MEAL_EMOJIS, DayOfWeek } from "@/lib/types";
 import { formatWeekRange, getWeekOffset } from "@/lib/utils";
 
 export default function PlanPage() {
@@ -38,108 +38,86 @@ export default function PlanPage() {
 
   return (
     <div className="px-5 pt-14 pb-4">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-6"
-      >
-        <h1 className="font-display text-3xl text-bark-700">Meal Plan</h1>
-        <div className="flex items-center gap-3 mt-2">
+      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
+        <h1 className="font-display text-[32px] font-extrabold text-ink tracking-tight">Meal Plan</h1>
+        <div className="flex items-center gap-3 mt-3">
           <button
             onClick={() => setCurrentWeek(getWeekOffset(currentWeek, -1))}
-            className="w-8 h-8 rounded-full bg-cream-200 flex items-center justify-center text-bark-400 hover:bg-cream-300 transition-colors"
+            className="w-9 h-9 rounded-xl bg-white shadow-card flex items-center justify-center text-ink-secondary hover:bg-bg-alt transition-colors text-lg"
           >
             ‹
           </button>
-          <p className="text-sm font-bold text-bark-500 flex-1 text-center">
-            {formatWeekRange(currentWeek)}
-          </p>
+          <p className="text-sm font-bold text-ink flex-1 text-center">{formatWeekRange(currentWeek)}</p>
           <button
             onClick={() => setCurrentWeek(getWeekOffset(currentWeek, 1))}
-            className="w-8 h-8 rounded-full bg-cream-200 flex items-center justify-center text-bark-400 hover:bg-cream-300 transition-colors"
+            className="w-9 h-9 rounded-xl bg-white shadow-card flex items-center justify-center text-ink-secondary hover:bg-bg-alt transition-colors text-lg"
           >
             ›
           </button>
         </div>
       </motion.div>
 
-      {/* Day Selector — horizontal scroll */}
+      {/* Day selector */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.1 }}
+        transition={{ delay: 0.08 }}
         className="flex gap-2 mb-6 overflow-x-auto pb-2 -mx-5 px-5 scrollbar-hide"
       >
         {DAYS.map((day) => {
           const count = meals.filter((m) => m.day_of_week === day).length;
           const isSelected = selectedDay === day;
-          const isToday =
-            DAYS[new Date().getDay() === 0 ? 6 : new Date().getDay() - 1] === day;
+          const isToday = DAYS[new Date().getDay() === 0 ? 6 : new Date().getDay() - 1] === day;
           return (
             <motion.button
               key={day}
               onClick={() => setSelectedDay(day)}
               whileTap={{ scale: 0.95 }}
-              className={`flex-shrink-0 w-14 rounded-2xl py-3 text-center transition-all relative ${
+              className={`flex-shrink-0 w-[52px] rounded-2xl py-3 text-center transition-all relative ${
                 isSelected
-                  ? "bg-terra-500 text-white shadow-warm"
-                  : "bg-white text-bark-400 shadow-soft"
+                  ? "bg-gradient-to-b from-coral-400 to-coral-500 text-white shadow-glow-coral"
+                  : "bg-white text-ink-secondary shadow-card"
               }`}
             >
-              <p className="text-[10px] font-bold uppercase tracking-wide">
-                {DAY_LABELS[day]}
-              </p>
-              <p className={`text-lg font-bold mt-0.5 ${isSelected ? "text-white" : "text-bark-600"}`}>
+              <p className="text-[9px] font-bold uppercase tracking-wider">{DAY_LABELS[day]}</p>
+              <p className={`text-lg font-extrabold mt-0.5 font-display ${isSelected ? "text-white" : "text-ink"}`}>
                 {count || "–"}
               </p>
               {isToday && !isSelected && (
-                <div className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-terra-400" />
+                <div className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-coral-400" />
               )}
             </motion.button>
           );
         })}
       </motion.div>
 
-      {/* Selected Day Meals */}
+      {/* Meals for selected day */}
       <motion.div
         key={selectedDay}
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
-        <h2 className="font-display text-xl text-bark-700 mb-4 capitalize">
-          {selectedDay}
-        </h2>
-
+        <h2 className="font-display text-xl font-extrabold text-ink mb-4 capitalize">{selectedDay}</h2>
         {MEAL_TYPES.map((type) => {
           const typeMeals = dayMeals.filter((m) => m.meal_type === type);
           return (
             <div key={type} className="mb-4">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-sm">{MEAL_EMOJIS[type]}</span>
-                <p className="text-xs font-bold text-bark-300 uppercase tracking-wider capitalize">
-                  {type}
-                </p>
+                <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest capitalize">{type}</p>
               </div>
               {typeMeals.length > 0 ? (
                 <div className="space-y-2">
                   <AnimatePresence mode="popLayout">
                     {typeMeals.map((meal, i) => (
-                      <MealCard
-                        key={meal.id}
-                        meal={meal}
-                        onRemove={removeMeal}
-                        index={i}
-                      />
+                      <MealCard key={meal.id} meal={meal} onRemove={removeMeal} index={i} />
                     ))}
                   </AnimatePresence>
                 </div>
               ) : (
-                <div className="bg-white/40 rounded-xl py-3 px-4 border border-dashed border-cream-300">
-                  <p className="text-bark-200 text-xs text-center">
-                    No {type} planned
-                  </p>
+                <div className="bg-white/60 rounded-2xl py-3 px-4 border border-dashed border-ink-faint/40">
+                  <p className="text-ink-faint text-xs text-center">No {type} planned</p>
                 </div>
               )}
             </div>
@@ -147,15 +125,9 @@ export default function PlanPage() {
         })}
       </motion.div>
 
-      {/* Voice CTA */}
       <div className="flex flex-col items-center gap-2 pt-4 pb-2">
-        <VoiceInput
-          onTranscriptComplete={handleVoiceComplete}
-          isProcessing={isProcessing}
-        />
-        <p className="text-bark-300 text-xs">
-          {isProcessing ? "Parsing your meals..." : "Speak to add meals"}
-        </p>
+        <VoiceInput onTranscriptComplete={handleVoiceComplete} isProcessing={isProcessing} />
+        <p className="text-ink-tertiary text-xs">{isProcessing ? "Parsing your meals..." : "Speak to add meals"}</p>
       </div>
     </div>
   );

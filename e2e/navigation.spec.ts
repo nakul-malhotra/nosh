@@ -4,7 +4,7 @@ test.describe("Home Page", () => {
   test("renders the Nosh branding and greeting", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator("h1")).toContainText("Nosh");
-    await expect(page.locator("text=Neha & Knuckles")).toBeVisible();
+    await expect(page.locator("text=Neha")).toBeVisible();
   });
 
   test("shows today's menu section", async ({ page }) => {

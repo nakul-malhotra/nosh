@@ -26,191 +26,89 @@ export default function SuggestionsPage() {
       const res = await fetch("/api/suggest", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          recentMeals: meals.map((m) => m.name),
-          pantryItems: pantryItems.map((p) => p.name),
-          busyWeek,
-        }),
+        body: JSON.stringify({ recentMeals: meals.map((m) => m.name), pantryItems: pantryItems.map((p) => p.name), busyWeek }),
       });
       const data = await res.json();
-      if (data.suggestions) {
-        setSuggestions(data.suggestions);
-      } else if (data.error) {
-        setError(data.error);
-      }
-    } catch {
-      setError("Could not get suggestions. Make sure your API key is configured.");
-    }
+      if (data.suggestions) setSuggestions(data.suggestions);
+      else if (data.error) setError(data.error);
+    } catch { setError("Could not get suggestions. Check your API key."); }
     setIsLoading(false);
   }, [meals, pantryItems, busyWeek]);
 
   return (
     <div className="px-5 pt-14 pb-4">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-6"
-      >
-        <h1 className="font-display text-3xl text-bark-700">Meal Ideas</h1>
-        <p className="text-bark-300 text-sm mt-1">
-          AI-powered suggestions based on what you love
-        </p>
+      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
+        <h1 className="font-display text-[32px] font-extrabold text-ink tracking-tight">Meal Ideas</h1>
+        <p className="text-ink-secondary text-sm mt-1">AI-powered suggestions based on what you love</p>
       </motion.div>
 
       {/* Busy week toggle */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="bg-white rounded-2xl p-4 shadow-soft mb-6"
-      >
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className="bg-white rounded-3xl p-5 shadow-card mb-5 border border-black/[0.03]">
         <div className="flex items-center justify-between">
           <div>
-            <p className="font-semibold text-bark-600 text-sm">⚡ Busy week mode</p>
-            <p className="text-bark-300 text-xs mt-0.5">
-              Quick meals under 30 min, minimal prep
-            </p>
+            <p className="font-bold text-ink text-[15px]">⚡ Busy week mode</p>
+            <p className="text-ink-tertiary text-xs mt-0.5">Quick meals under 30 min</p>
           </div>
-          <button
-            onClick={() => setBusyWeek(!busyWeek)}
-            className={`w-12 h-7 rounded-full transition-all relative ${
-              busyWeek ? "bg-saffron-400" : "bg-cream-200"
-            }`}
-          >
-            <motion.div
-              className="w-5 h-5 bg-white rounded-full absolute top-1 shadow"
-              animate={{ left: busyWeek ? 26 : 4 }}
-              transition={{ type: "spring", stiffness: 500, damping: 30 }}
-            />
+          <button onClick={() => setBusyWeek(!busyWeek)} className={`w-[52px] h-[30px] rounded-full transition-all relative ${busyWeek ? "bg-gold-400 shadow-glow-gold" : "bg-bg-alt"}`}>
+            <motion.div className="w-[22px] h-[22px] bg-white rounded-full absolute top-1 shadow-card" animate={{ left: busyWeek ? 26 : 4 }} transition={{ type: "spring", stiffness: 500, damping: 30 }} />
           </button>
         </div>
       </motion.div>
 
-      {/* Context info */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.15 }}
-        className="flex gap-3 mb-6"
-      >
-        <div className="flex-1 bg-terra-50 rounded-2xl p-3 text-center">
-          <p className="text-xl font-bold text-terra-500">{meals.length}</p>
-          <p className="text-[10px] text-terra-400 font-semibold uppercase">Past meals</p>
+      {/* Context */}
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }} className="flex gap-3 mb-5">
+        <div className="flex-1 bg-white rounded-2xl p-4 text-center shadow-card border border-black/[0.03]">
+          <p className="text-2xl font-extrabold text-coral-500 font-display">{meals.length}</p>
+          <p className="text-[10px] text-ink-tertiary font-bold uppercase tracking-widest mt-1">Past meals</p>
         </div>
-        <div className="flex-1 bg-sage-50 rounded-2xl p-3 text-center">
-          <p className="text-xl font-bold text-sage-500">{pantryItems.length}</p>
-          <p className="text-[10px] text-sage-400 font-semibold uppercase">Pantry items</p>
+        <div className="flex-1 bg-white rounded-2xl p-4 text-center shadow-card border border-black/[0.03]">
+          <p className="text-2xl font-extrabold text-mint-500 font-display">{pantryItems.length}</p>
+          <p className="text-[10px] text-ink-tertiary font-bold uppercase tracking-widest mt-1">Pantry items</p>
         </div>
       </motion.div>
 
-      {/* Generate button */}
       <motion.button
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
+        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}
         whileTap={{ scale: 0.97 }}
         onClick={getSuggestions}
         disabled={isLoading}
-        className="w-full bg-terra-500 text-white font-bold py-4 rounded-2xl mb-6 flex items-center justify-center gap-2 text-sm disabled:opacity-60"
+        className="w-full bg-gradient-to-r from-coral-500 via-coral-400 to-gold-400 text-white font-bold py-4 rounded-2xl mb-6 flex items-center justify-center gap-2 text-sm disabled:opacity-60 shadow-glow-coral"
       >
         {isLoading ? (
-          <>
-            <motion.div
-              className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            />
-            Thinking...
-          </>
+          <><motion.div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full" animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }} />Thinking...</>
         ) : (
-          <>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <path d="M12 2a7 7 0 015 11.9V17a2 2 0 01-2 2H9a2 2 0 01-2-2v-3.1A7 7 0 0112 2z" />
-              <line x1="9" y1="21" x2="15" y2="21" />
-            </svg>
-            Get meal suggestions
-          </>
+          <><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M12 2a7 7 0 015 11.9V17a2 2 0 01-2 2H9a2 2 0 01-2-2v-3.1A7 7 0 0112 2z" /><line x1="9" y1="21" x2="15" y2="21" /></svg>Get meal suggestions</>
         )}
       </motion.button>
 
-      {error && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="bg-terra-50 text-terra-600 rounded-2xl p-4 mb-6 text-sm"
-        >
-          {error}
-        </motion.div>
-      )}
+      {error && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-coral-50 text-coral-600 rounded-2xl p-4 mb-5 text-sm border border-coral-100">{error}</motion.div>}
 
-      {/* Suggestions */}
       <AnimatePresence mode="popLayout">
-        {suggestions.map((suggestion, i) => (
-          <motion.div
-            key={suggestion.name}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }}
-            className="bg-white rounded-3xl p-5 shadow-soft mb-4"
-          >
+        {suggestions.map((s, i) => (
+          <motion.div key={s.name} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }} className="bg-white rounded-3xl p-5 shadow-card mb-3 border border-black/[0.03]">
             <div className="flex items-start justify-between mb-2">
-              <h3 className="font-display text-lg text-bark-700">
-                {suggestion.name}
-              </h3>
-              <span className="text-xs font-bold text-saffron-500 bg-saffron-50 px-2 py-1 rounded-full flex-shrink-0 ml-2">
-                {suggestion.prepTime}
-              </span>
+              <h3 className="font-display text-lg font-extrabold text-ink leading-tight">{s.name}</h3>
+              <span className="text-xs font-bold text-gold-600 bg-gold-50 px-2.5 py-1 rounded-full flex-shrink-0 ml-2 border border-gold-100">{s.prepTime}</span>
             </div>
-            <p className="text-bark-400 text-sm mb-3">{suggestion.description}</p>
-
-            {/* Why this suggestion */}
-            <div className="bg-sage-50 rounded-xl px-3 py-2 mb-3">
-              <p className="text-sage-600 text-xs">
-                <span className="font-bold">Why this? </span>
-                {suggestion.reason}
-              </p>
+            <p className="text-ink-secondary text-sm mb-3">{s.description}</p>
+            <div className="bg-mint-50 rounded-xl px-3.5 py-2.5 mb-3 border border-mint-100">
+              <p className="text-mint-700 text-xs"><span className="font-bold">Why this? </span>{s.reason}</p>
             </div>
-
-            {/* Ingredients preview */}
             <div className="flex flex-wrap gap-1.5">
-              {suggestion.ingredients.slice(0, 6).map((ing) => (
-                <span
-                  key={ing}
-                  className={`text-xs px-2 py-1 rounded-full font-medium ${
-                    pantryItems.some((p) =>
-                      p.name.toLowerCase().includes(ing.toLowerCase())
-                    )
-                      ? "bg-sage-100 text-sage-600"
-                      : "bg-cream-200 text-bark-400"
-                  }`}
-                >
-                  {ing}
-                </span>
+              {s.ingredients.slice(0, 6).map((ing) => (
+                <span key={ing} className={`text-xs px-2.5 py-1 rounded-full font-medium ${pantryItems.some((p) => p.name.toLowerCase().includes(ing.toLowerCase())) ? "bg-mint-50 text-mint-600 border border-mint-200" : "bg-bg-alt text-ink-secondary"}`}>{ing}</span>
               ))}
-              {suggestion.ingredients.length > 6 && (
-                <span className="text-xs text-bark-200 px-2 py-1">
-                  +{suggestion.ingredients.length - 6} more
-                </span>
-              )}
+              {s.ingredients.length > 6 && <span className="text-xs text-ink-faint px-2 py-1">+{s.ingredients.length - 6} more</span>}
             </div>
           </motion.div>
         ))}
       </AnimatePresence>
 
       {suggestions.length === 0 && !isLoading && !error && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-center py-12"
-        >
-          <p className="text-5xl mb-3">💡</p>
-          <p className="text-bark-300 font-medium text-sm">
-            Ready when you are
-          </p>
-          <p className="text-bark-200 text-xs mt-1 max-w-[250px] mx-auto">
-            Tap above to get personalized meal ideas based on your history and pantry
-          </p>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-12">
+          <div className="w-16 h-16 rounded-3xl bg-gold-50 flex items-center justify-center mx-auto mb-4"><span className="text-3xl">💡</span></div>
+          <p className="text-ink font-bold text-[15px]">Ready when you are</p>
+          <p className="text-ink-tertiary text-xs mt-1 max-w-[260px] mx-auto">Tap above to get personalized meal ideas based on your history and pantry</p>
         </motion.div>
       )}
     </div>
