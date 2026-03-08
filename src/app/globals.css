@@ -2,20 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Figtree:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  --color-coral: #F0573A;
-  --color-mint: #1A9E6F;
-  --color-gold: #F0A800;
-  --color-bg: #F8F6F2;
-  --color-ink: #1A1A1A;
+  --honey: #D4A054;
+  --ember: #E8663C;
+  --herb: #6ECBA0;
+  --base: #0C0A08;
+  --cream: #F2EBE1;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-* {
-  -webkit-tap-highlight-color: transparent;
-}
+* { -webkit-tap-highlight-color: transparent; }
 
 html {
   scroll-behavior: smooth;
@@ -24,144 +22,155 @@ html {
 }
 
 body {
-  font-family: 'Figtree', system-ui, sans-serif;
-  background: var(--color-bg);
-  color: var(--color-ink);
+  font-family: 'Outfit', system-ui, sans-serif;
+  background: var(--base);
+  color: var(--cream);
   min-height: 100dvh;
   overflow-x: hidden;
+  position: relative;
 }
 
-/* Warm ambient gradient behind the whole app */
-body::after {
-  content: '';
-  position: fixed;
-  top: -40%;
-  right: -30%;
-  width: 80vw;
-  height: 80vw;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(240, 87, 58, 0.06) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
-
+/* ── Ambient glow orbs ── */
 body::before {
   content: '';
   position: fixed;
-  bottom: -30%;
-  left: -20%;
-  width: 70vw;
-  height: 70vw;
+  top: -20vh;
+  right: -15vw;
+  width: 60vw;
+  height: 60vw;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(26, 158, 111, 0.05) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(212,160,84,0.07) 0%, transparent 65%);
   pointer-events: none;
   z-index: 0;
+  filter: blur(40px);
 }
 
-/* Grain texture */
-.grain::before {
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -15vh;
+  left: -10vw;
+  width: 50vw;
+  height: 50vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,102,60,0.05) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(40px);
+}
+
+/* ── Grain overlay ── */
+.grain::after {
   content: '';
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: 200;
   pointer-events: none;
-  opacity: 0.018;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 200px 200px;
 }
 
 ::selection {
-  background-color: rgba(240, 87, 58, 0.12);
-  color: var(--color-ink);
+  background: rgba(212,160,84,0.25);
+  color: var(--cream);
 }
 
-::-webkit-scrollbar {
-  width: 0px;
-}
+::-webkit-scrollbar { width: 0; }
 
 .page-content {
-  padding-bottom: calc(5.5rem + var(--safe-bottom));
+  padding-bottom: calc(6rem + var(--safe-bottom));
   position: relative;
   z-index: 1;
 }
 
-/* Glass effect utility */
-.glass {
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
+/* ── Glass surfaces ── */
+.glass-dark {
+  background: rgba(22, 18, 16, 0.75);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
 }
 
-.glass-heavy {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(32px) saturate(200%);
-  -webkit-backdrop-filter: blur(32px) saturate(200%);
+.glass-card {
+  background: rgba(30, 26, 22, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(242, 235, 225, 0.06);
 }
 
-/* Stagger children animation */
+/* ── Warm border utility ── */
+.border-warm {
+  border: 1px solid rgba(212, 160, 84, 0.12);
+}
+
+.border-subtle {
+  border: 1px solid rgba(242, 235, 225, 0.06);
+}
+
+/* ── Stagger animations ── */
 .stagger > * {
-  animation: staggerFadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: stgUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .stagger > *:nth-child(1) { animation-delay: 0ms; }
-.stagger > *:nth-child(2) { animation-delay: 50ms; }
-.stagger > *:nth-child(3) { animation-delay: 100ms; }
-.stagger > *:nth-child(4) { animation-delay: 150ms; }
-.stagger > *:nth-child(5) { animation-delay: 200ms; }
-.stagger > *:nth-child(6) { animation-delay: 250ms; }
-.stagger > *:nth-child(7) { animation-delay: 300ms; }
-.stagger > *:nth-child(8) { animation-delay: 350ms; }
-.stagger > *:nth-child(9) { animation-delay: 400ms; }
-.stagger > *:nth-child(10) { animation-delay: 450ms; }
+.stagger > *:nth-child(2) { animation-delay: 60ms; }
+.stagger > *:nth-child(3) { animation-delay: 120ms; }
+.stagger > *:nth-child(4) { animation-delay: 180ms; }
+.stagger > *:nth-child(5) { animation-delay: 240ms; }
+.stagger > *:nth-child(6) { animation-delay: 300ms; }
+.stagger > *:nth-child(7) { animation-delay: 360ms; }
+.stagger > *:nth-child(8) { animation-delay: 420ms; }
 
-@keyframes staggerFadeUp {
+@keyframes stgUp {
   0% { transform: translateY(16px); opacity: 0; }
   100% { transform: translateY(0); opacity: 1; }
 }
 
-/* Voice overlay gradient mesh */
-@keyframes meshRotate {
-  0% { transform: rotate(0deg) scale(1.5); }
-  100% { transform: rotate(360deg) scale(1.5); }
+/* ── Honey gradient text ── */
+.text-honey-gradient {
+  background: linear-gradient(135deg, #F5C56A 0%, #D4A054 40%, #E8663C 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
+/* ── Voice mesh bg ── */
 .voice-mesh {
   background:
-    radial-gradient(circle at 20% 80%, rgba(240, 87, 58, 0.8) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255, 200, 0, 0.6) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(26, 158, 111, 0.6) 0%, transparent 60%),
-    linear-gradient(135deg, #F0573A 0%, #1A9E6F 100%);
+    radial-gradient(ellipse at 30% 80%, rgba(212,160,84,0.6) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 20%, rgba(232,102,60,0.5) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(110,203,160,0.3) 0%, transparent 60%),
+    #0C0A08;
 }
 
-/* Pill chip */
+/* ── Animated gradient border ── */
+.gradient-ring {
+  position: relative;
+}
+.gradient-ring::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  background: conic-gradient(from 0deg, #D4A054, #E8663C, #6ECBA0, #D4A054);
+  z-index: -1;
+  animation: ringRotate 4s linear infinite;
+  opacity: 0.7;
+}
+@keyframes ringRotate {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Chip utility ── */
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 6px 14px;
+  gap: 5px;
+  padding: 7px 14px;
   border-radius: 100px;
   font-size: 13px;
   font-weight: 600;
   transition: all 0.2s ease;
-}
-
-/* Animated gradient border */
-.gradient-border {
-  position: relative;
-}
-.gradient-border::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: inherit;
-  background: linear-gradient(135deg, #F0573A, #FFD84A, #1A9E6F, #F0573A);
-  background-size: 300% 300%;
-  animation: gradientShift 4s ease infinite;
-  z-index: -1;
-  opacity: 0.7;
-}
-
-@keyframes gradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  border: 1px solid transparent;
 }

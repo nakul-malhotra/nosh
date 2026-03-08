@@ -25,9 +25,9 @@ test.describe("Suggestions Page", () => {
 
   test("can toggle busy week mode", async ({ page }) => {
     await page.goto("/suggestions");
-    const toggle = page.locator("button.rounded-full").filter({ has: page.locator("div.bg-white") }).first();
+    // The toggle is a button.rounded-full with a child motion div
+    const toggle = page.locator("button.rounded-full").first();
     await toggle.click();
-    // Toggle should change state (visual feedback)
   });
 
   test("fetches suggestions when button is clicked", async ({ page }) => {

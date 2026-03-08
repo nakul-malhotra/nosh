@@ -7,11 +7,7 @@ export const metadata: Metadata = {
   title: "Nosh · Neha & Nakul's Kitchen",
   description: "Your smart meal planner — speak your meals, get your groceries.",
   manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-    title: "Nosh",
-  },
+  appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "Nosh" },
 };
 
 export const viewport: Viewport = {
@@ -19,21 +15,15 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: "#F8F6F2",
+  themeColor: "#0C0A08",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="font-body antialiased bg-bg text-ink grain">
+      <body className="font-body antialiased grain">
         <AppProvider>
-          <main className="page-content min-h-screen max-w-lg mx-auto">
-            {children}
-          </main>
+          <main className="page-content min-h-screen max-w-lg mx-auto">{children}</main>
           <BottomNav />
         </AppProvider>
       </body>
